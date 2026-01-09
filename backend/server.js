@@ -2,6 +2,7 @@ console.log('Starting server...');
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+const cors = require('cors');
 try {
     console.log("server.js file is being executed");
 require('dotenv').config();
@@ -19,6 +20,10 @@ const Visit = require('./models/Visit')
 const app = express();
 
 app.use(morgan('dev'));
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
