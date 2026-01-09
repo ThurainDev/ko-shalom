@@ -15,12 +15,28 @@ const ProductController = {
     create: async (req, res) => {
         try {
             const data = req.body;
-            if (req.file) {
-                data.image = req.file.filename;
+            // Handle file uploads (req.files is array from upload.any())
+            if (req.files && req.files.length > 0) {
+                const imageFile = req.files.find(f => f.fieldname === 'image');
+                if (imageFile) {
+                    data.image = imageFile.filename;
+                }
             }
+
             if (typeof data.tracks === 'string') {
                 try { data.tracks = JSON.parse(data.tracks); } catch (e) { data.tracks = []; }
             }
+
+            // Handle audio files for tracks
+            if (data.tracks && Array.isArray(data.tracks) && req.files) {
+                data.tracks.forEach((track, idx) => {
+                    const audioFile = req.files.find(f => f.fieldname === `trackAudio${idx}`);
+                    if (audioFile) {
+                        track.audio = audioFile.filename;
+                    }
+                });
+            }
+
             const product = new Product(data);
             await product.save();
             return res.status(201).json(product);
@@ -32,20 +48,25 @@ const ProductController = {
     update: async (req, res) => {
         try {
             const data = req.body;
+            
             // Handle image upload
-            if (req.files && req.files.image && req.files.image[0]) {
-                data.image = req.files.image[0].filename;
+            if (req.files && req.files.length > 0) {
+                const imageFile = req.files.find(f => f.fieldname === 'image');
+                if (imageFile) {
+                    data.image = imageFile.filename;
+                }
             }
+
             // Parse tracks if sent as string
             if (typeof data.tracks === 'string') {
                 try { data.tracks = JSON.parse(data.tracks); } catch (e) { data.tracks = []; }
             }
             // Handle audio uploads for tracks
-            if (data.tracks && Array.isArray(data.tracks)) {
+            if (data.tracks && Array.isArray(data.tracks) && req.files) {
                 data.tracks.forEach((track, idx) => {
-                    const audioField = `trackAudio${idx}`;
-                    if (req.files && req.files[audioField] && req.files[audioField][0]) {
-                        track.audio = req.files[audioField][0].filename;
+                    const audioFile = req.files.find(f => f.fieldname === `trackAudio${idx}`);
+                    if (audioFile) {
+                        track.audio = audioFile.filename;
                     }
                 });
             }
