@@ -157,7 +157,8 @@ export default function AdminDashboard() {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
         if (key === 'tracks') {
-          const tracksToSend = value.map(({ title, duration }, idx) => ({ title, duration }));
+          // Fix: Include 'audio' in the map so existing audio links are preserved
+          const tracksToSend = value.map(({ title, duration, audio }, idx) => ({ title, duration, audio }));
           formData.append('tracks', JSON.stringify(tracksToSend));
           value.forEach((track, idx) => {
             if (track.audioFile) {

@@ -19,7 +19,8 @@ const ProductController = {
             if (req.files && req.files.length > 0) {
                 const imageFile = req.files.find(f => f.fieldname === 'image');
                 if (imageFile) {
-                    data.image = imageFile.filename;
+                    // Use file.path for Cloudinary URL, fall back to filename for local
+                    data.image = imageFile.path || imageFile.filename;
                 }
             }
 
@@ -32,7 +33,8 @@ const ProductController = {
                 data.tracks.forEach((track, idx) => {
                     const audioFile = req.files.find(f => f.fieldname === `trackAudio${idx}`);
                     if (audioFile) {
-                        track.audio = audioFile.filename;
+                         // Use file.path for Cloudinary URL, fall back to filename for local
+                        track.audio = audioFile.path || audioFile.filename;
                     }
                 });
             }
@@ -53,7 +55,7 @@ const ProductController = {
             if (req.files && req.files.length > 0) {
                 const imageFile = req.files.find(f => f.fieldname === 'image');
                 if (imageFile) {
-                    data.image = imageFile.filename;
+                    data.image = imageFile.path || imageFile.filename;
                 }
             }
 
@@ -66,7 +68,7 @@ const ProductController = {
                 data.tracks.forEach((track, idx) => {
                     const audioFile = req.files.find(f => f.fieldname === `trackAudio${idx}`);
                     if (audioFile) {
-                        track.audio = audioFile.filename;
+                        track.audio = audioFile.path || audioFile.filename;
                     }
                 });
             }
