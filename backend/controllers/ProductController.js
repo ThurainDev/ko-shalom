@@ -1,69 +1,111 @@
 const Product=require('../models/Product')
 const mongoose = require('mongoose');
 
+// Helper to safely parse JSON strings
+const parseJsonString = (str) => {
+    try {
+        if (str && typeof str === 'string') {
+            return JSON.parse(str);
+        }
+    } catch (e) {
+        console.error("Failed to parse JSON string:", str, e);
+    }
+    return [];
+};
+
 const ProductController = {
-    index : async (req, res)=>{
-        // Fetch all products from the database
+    /**
+     * Fetch all products, sorted by creation date.
+     */
+    index: async (req, res) => {
         try {
-            const products = await Product.find();
+            const products = await Product.find().sort({ createdAt: -1 });
             return res.json(products);
         } catch (err) {
-            return res.status(500).json({ error: 'Failed to fetch products' });
+            return res.status(500).json({ error: 'Failed to fetch products', details: err.message });
         }
     },
-    // Add create method
+
+    /**
+     * Create a new product.
+     */
     create: async (req, res) => {
         try {
-            const data = req.body;
-            if (req.file) {
-                data.image = req.file.filename;
+            const { body, file } = req;
+            const productData = { ...body };
+
+            if (file) {
+                productData.image = file.filename;
             }
-            if (typeof data.tracks === 'string') {
-                try { data.tracks = JSON.parse(data.tracks); } catch (e) { data.tracks = []; }
+
+            if (productData.tracks) {
+                productData.tracks = parseJsonString(productData.tracks);
             }
-            const product = new Product(data);
+
+            const product = new Product(productData);
             await product.save();
             return res.status(201).json(product);
         } catch (err) {
-            return res.status(400).json({ error: err.message });
+            if (err.name === 'ValidationError') {
+                return res.status(422).json({ error: 'Validation failed', details: err.errors });
+            }
+            return res.status(500).json({ error: 'Failed to create product', details: err.message });
         }
     },
-    // Update product
+
+    /**
+     * Update an existing product.
+     */
     update: async (req, res) => {
         try {
-            const data = req.body;
-            // Handle image upload
-            if (req.files && req.files.image && req.files.image[0]) {
-                data.image = req.files.image[0].filename;
+            const { body, files, params } = req;
+            const updateData = { ...body };
+
+            // Handle main image update
+            if (files && files.image && files.image[0]) {
+                updateData.image = files.image[0].filename;
             }
-            // Parse tracks if sent as string
-            if (typeof data.tracks === 'string') {
-                try { data.tracks = JSON.parse(data.tracks); } catch (e) { data.tracks = []; }
+
+            // Parse tracks if they are a JSON string
+            if (updateData.tracks) {
+                updateData.tracks = parseJsonString(updateData.tracks);
             }
-            // Handle audio uploads for tracks
-            if (data.tracks && Array.isArray(data.tracks)) {
-                data.tracks.forEach((track, idx) => {
-                    const audioField = `trackAudio${idx}`;
-                    if (req.files && req.files[audioField] && req.files[audioField][0]) {
-                        track.audio = req.files[audioField][0].filename;
+
+            // Associate uploaded audio files with their tracks
+            if (updateData.tracks && Array.isArray(updateData.tracks)) {
+                updateData.tracks.forEach((track, idx) => {
+                    const audioFile = files && files[`trackAudio${idx}`];
+                    if (audioFile && audioFile[0]) {
+                        track.audio = audioFile[0].filename;
                     }
                 });
             }
-            const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
-            if (!product) return res.status(404).json({ error: 'Product not found' });
+
+            const product = await Product.findByIdAndUpdate(params.id, updateData, { new: true, runValidators: true });
+            if (!product) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
             return res.json(product);
         } catch (err) {
-            return res.status(400).json({ error: err.message });
+            if (err.name === 'ValidationError') {
+                return res.status(422).json({ error: 'Validation failed', details: err.errors });
+            }
+            return res.status(500).json({ error: 'Failed to update product', details: err.message });
         }
     },
-    // Delete product
+
+    /**
+     * Delete a product.
+     */
     delete: async (req, res) => {
         try {
             const product = await Product.findByIdAndDelete(req.params.id);
-            if (!product) return res.status(404).json({ error: 'Product not found' });
-            return res.json({ message: 'Product deleted' });
+            if (!product) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
+            return res.json({ message: 'Product deleted successfully' });
         } catch (err) {
-            return res.status(400).json({ error: err.message });
+            return res.status(500).json({ error: 'Failed to delete product', details: err.message });
         }
     }
 }
