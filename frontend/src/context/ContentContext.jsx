@@ -23,15 +23,19 @@ export const ContentProvider = ({ children }) => {
       const contentData = {};
       
       // Organize content by page and section
-      response.data.forEach(item => {
-        if (!contentData[item.page]) {
-          contentData[item.page] = {};
-        }
-        const existing = contentData[item.page][item.section];
-        if (!existing || new Date(item.updatedAt) > new Date(existing.updatedAt)) {
-          contentData[item.page][item.section] = item;
-        }
-      });
+      if (Array.isArray(response.data)) {
+        response.data.forEach(item => {
+          if (!contentData[item.page]) {
+            contentData[item.page] = {};
+          }
+          const existing = contentData[item.page][item.section];
+          if (!existing || new Date(item.updatedAt) > new Date(existing.updatedAt)) {
+            contentData[item.page][item.section] = item;
+          }
+        });
+      } else {
+        console.error("Error: response.data is not an array", response.data);
+      }
       
       setContent(contentData);
       setError(null);

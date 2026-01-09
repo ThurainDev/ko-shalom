@@ -23,9 +23,13 @@ export const AboutProvider = ({ children }) => {
       const contentData = {};
       
       // Organize content by section
-      response.data.forEach(item => {
-        contentData[item.section] = item;
-      });
+      if (Array.isArray(response.data)) {
+        response.data.forEach(item => {
+          contentData[item.section] = item;
+        });
+      } else {
+        console.error("Error: response.data is not an array", response.data);
+      }
       
       console.log('AboutContext: Fetched content:', contentData);
       setAboutContent(contentData);
