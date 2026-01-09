@@ -19,7 +19,7 @@ export default function AboutContentManager({ token }) {
   const fetchSections = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/about-content/admin/all', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/about-content/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSections(response.data);
@@ -85,7 +85,7 @@ export default function AboutContentManager({ token }) {
     try {
       setUploading(true);
       
-      const url = `/api/about-content/admin/${editingSection}`;
+      const url = `${import.meta.env.VITE_API_URL}/api/about-content/admin/${editingSection}`;
       const method = 'put';
 
       const response = await axios[method](url, formData, {
@@ -109,7 +109,7 @@ export default function AboutContentManager({ token }) {
 
   const toggleActive = async (sectionId) => {
     try {
-      await axios.patch(`/api/about-content/admin/${sectionId}/toggle`, {}, {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/api/about-content/admin/${sectionId}/toggle`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchSections();

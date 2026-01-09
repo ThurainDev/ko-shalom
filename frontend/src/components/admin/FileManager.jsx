@@ -23,8 +23,8 @@ export default function FileManager({ token, onFileSelect, showModal = false, on
         const m = url.match(/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z0-9]+$/);
         return m ? m[1] : null;
       };
-
-      const response = await axios.get('/api/upload/files', {
+      
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/upload/files`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const normalized = (response.data || []).map(item => {
@@ -52,9 +52,9 @@ export default function FileManager({ token, onFileSelect, showModal = false, on
   const handleDeleteFile = async (fObj) => {
     const filename = (fObj && (fObj.id || fObj.src)) || fObj;
     if (!window.confirm('Are you sure you want to delete this file?')) return;
-
+    
     try {
-      await axios.delete(`/api/upload/${encodeURIComponent(filename)}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/upload/${encodeURIComponent(filename)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFiles(files.filter(f => (f.id !== filename && f.src !== filename)));

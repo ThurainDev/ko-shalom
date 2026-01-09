@@ -14,9 +14,9 @@ export default function AdminLogin() {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('/api/admin/login', { username, password });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/login`, { username, password });
       login(res.data.token);
-      navigate(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/admin/dashboard`);
+      navigate('/admin/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
     }

@@ -27,10 +27,10 @@ export default function Home() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/products`);
-        const sorted = [...res.data].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        setLatestProducts(sorted.slice(0, 3));
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
+          const sorted = [...res.data].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          setLatestProducts(sorted.slice(0, 3));
       } catch (e) {
         setLatestProducts([]);
       }

@@ -13,7 +13,7 @@ export default function ImageTest({ token }) {
   const fetchFiles = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/upload/files', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/upload/files`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Normalize response: cloudinary returns objects with url, backend local returns filename strings

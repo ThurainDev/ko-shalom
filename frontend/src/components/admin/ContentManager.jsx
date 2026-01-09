@@ -134,7 +134,7 @@ export default function ContentManager({ token, pageFilter }) {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.get('/api/content/admin/all', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(res.data);
@@ -276,14 +276,14 @@ export default function ContentManager({ token, pageFilter }) {
       }
 
       if (editingContent) {
-        await axios.put(`/api/content/admin/${editingContent._id}`, formData, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/content/admin/${editingContent._id}`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         });
       } else {
-        await axios.post('/api/content/admin', formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/content/admin`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -306,7 +306,7 @@ export default function ContentManager({ token, pageFilter }) {
     if (!window.confirm('Delete this content?')) return;
     
     try {
-      await axios.delete(`/api/content/admin/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/content/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(content.filter(c => c._id !== id));
@@ -319,7 +319,7 @@ export default function ContentManager({ token, pageFilter }) {
 
   const handleToggle = async (id) => {
     try {
-      const res = await axios.patch(`/api/content/admin/${id}/toggle`, {}, {
+      const res = await axios.patch(`${import.meta.env.VITE_API_URL}/api/content/admin/${id}/toggle`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(content.map(c => c._id === id ? res.data : c));

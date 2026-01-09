@@ -28,7 +28,7 @@ export default function FileUpload({
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await axios.post(uploadEndpoint, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}${uploadEndpoint}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`

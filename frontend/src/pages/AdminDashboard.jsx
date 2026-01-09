@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('/api/admin/products', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/products`, { headers: { Authorization: `Bearer ${token}` } });
       setProducts(res.data);
     } catch (err) {
       setError('Failed to fetch products');
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
     setContactsLoading(true);
     setContactsError('');
     try {
-      const res = await axios.get('/api/admin/contacts', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/contacts`, { headers: { Authorization: `Bearer ${token}` } });
       setContacts(res.data);
     } catch (err) {
       setContactsError('Failed to fetch contact submissions');
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
     setVisitStatsLoading(true);
     setVisitStatsError('');
     try {
-      const res = await axios.get('/api/admin/visits', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/visits`, { headers: { Authorization: `Bearer ${token}` } });
       setVisitStats(res.data);
     } catch (err) {
       setVisitStatsError('Failed to fetch site traffic stats');
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
     try {
-      await axios.delete(`/api/admin/products/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/products/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       setError('Delete failed');
@@ -173,9 +173,9 @@ export default function AdminDashboard() {
       }
       const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
       if (editProduct) {
-        await axios.put(`/api/admin/products/${editProduct._id}`, formData, config);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/products/${editProduct._id}`, formData, config);
       } else {
-        await axios.post('/api/admin/products', formData, config);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/products`, formData, config);
       }
       setShowForm(false);
       fetchProducts();

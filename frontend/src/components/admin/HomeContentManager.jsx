@@ -20,7 +20,7 @@ export default function HomeContentManager({ token }) {
   const fetchSections = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/content/admin/all', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const homeSections = (response.data || []).filter((c) => c.page === 'home');
@@ -121,8 +121,8 @@ export default function HomeContentManager({ token }) {
       if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
-
-      const updateResponse = await axios.put(`/api/content/admin/${editingSection}`, formDataToSend, {
+      
+      const updateResponse = await axios.put(`${import.meta.env.VITE_API_URL}/api/content/admin/${editingSection}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -146,7 +146,7 @@ export default function HomeContentManager({ token }) {
 
   const toggleActive = async (sectionId) => {
     try {
-      await axios.patch(`/api/content/admin/${sectionId}/toggle`, {}, {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/api/content/admin/${sectionId}/toggle`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       await fetchSections();
@@ -210,7 +210,7 @@ export default function HomeContentManager({ token }) {
                   fd.append('isActive', 'true');
                   fd.append('order', String((sections.length || 0) + 1));
                   fd.append('items', JSON.stringify([]));
-                  await axios.post('/api/content/admin', fd, {
+                  await axios.post(`${import.meta.env.VITE_API_URL}/api/content/admin`, fd, {
                     headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
                   });
                   await fetchSections();

@@ -19,7 +19,7 @@ export const ContentProvider = ({ children }) => {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/content`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content`);
       const contentData = {};
       
       // Organize content by page and section
