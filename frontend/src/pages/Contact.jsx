@@ -37,7 +37,7 @@ export default function Contact() {
     setSubmitError(null);
     setSubmitMessage(null);
     try {
-      await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}api/contact`, {
+      await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/contact`, {
         ...formData,
         type: activeTab
       });
