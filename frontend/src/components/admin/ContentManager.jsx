@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { resolveImage } from '../../utils/api';
+import { resolveImage, BACKEND_URL } from '../../utils/api';
 import { useContent } from '../../context/ContentContext';
 
 export default function ContentManager({ token, pageFilter }) {
@@ -134,7 +134,7 @@ export default function ContentManager({ token, pageFilter }) {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/admin/all`, {
+      const res = await axios.get(`${BACKEND_URL}/api/content/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(res.data);
@@ -276,14 +276,14 @@ export default function ContentManager({ token, pageFilter }) {
       }
 
       if (editingContent) {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/content/admin/${editingContent._id}`, formData, {
+        await axios.put(`${BACKEND_URL}/api/content/admin/${editingContent._id}`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         });
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/content/admin`, formData, {
+        await axios.post(`${BACKEND_URL}/api/content/admin`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -306,7 +306,7 @@ export default function ContentManager({ token, pageFilter }) {
     if (!window.confirm('Delete this content?')) return;
     
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/content/admin/${id}`, {
+      await axios.delete(`${BACKEND_URL}/api/content/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(content.filter(c => c._id !== id));
@@ -319,7 +319,7 @@ export default function ContentManager({ token, pageFilter }) {
 
   const handleToggle = async (id) => {
     try {
-      const res = await axios.patch(`${import.meta.env.VITE_API_URL}/api/content/admin/${id}/toggle`, {}, {
+      const res = await axios.patch(`${BACKEND_URL}/api/content/admin/${id}/toggle`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setContent(content.map(c => c._id === id ? res.data : c));

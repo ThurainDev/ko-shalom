@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../utils/api";
 // component
 import Hero_Section from "../components/contact/section/Hero_Section";
 import FAQ_Section from "../components/contact/section/FAQ_Section";
@@ -37,7 +38,7 @@ export default function Contact() {
     setSubmitError(null);
     setSubmitMessage(null);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, {
+      await axios.post(`${BACKEND_URL}/api/contact`, {
         ...formData,
         type: activeTab
       });

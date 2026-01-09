@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { resolveImage } from '../../utils/api';
+import { resolveImage, BACKEND_URL } from '../../utils/api';
 import FileUpload from './FileUpload';
 
 export default function FileManager({ token, onFileSelect, showModal = false, onClose }) {
@@ -24,7 +24,7 @@ export default function FileManager({ token, onFileSelect, showModal = false, on
         return m ? m[1] : null;
       };
       
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/upload/files`, {
+      const response = await axios.get(`${BACKEND_URL}/api/upload/files`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const normalized = (response.data || []).map(item => {
@@ -54,7 +54,7 @@ export default function FileManager({ token, onFileSelect, showModal = false, on
     if (!window.confirm('Are you sure you want to delete this file?')) return;
     
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/upload/${encodeURIComponent(filename)}`, {
+      await axios.delete(`${BACKEND_URL}/api/upload/${encodeURIComponent(filename)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFiles(files.filter(f => (f.id !== filename && f.src !== filename)));

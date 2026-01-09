@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { resolveImage } from '../../utils/api';
+import { resolveImage, BACKEND_URL } from '../../utils/api';
 
 export default function ImageTest({ token }) {
   const [files, setFiles] = useState([]);
@@ -13,7 +13,7 @@ export default function ImageTest({ token }) {
   const fetchFiles = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/upload/files`, {
+      const response = await axios.get(`${BACKEND_URL}/api/upload/files`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Normalize response: cloudinary returns objects with url, backend local returns filename strings

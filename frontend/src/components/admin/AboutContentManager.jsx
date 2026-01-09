@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAbout } from '../../context/AboutContext';
+import { BACKEND_URL } from '../../utils/api';
 import FileUpload from './FileUpload';
 
 export default function AboutContentManager({ token }) {
@@ -19,7 +20,7 @@ export default function AboutContentManager({ token }) {
   const fetchSections = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/about-content/admin/all`, {
+      const response = await axios.get(`${BACKEND_URL}/api/about-content/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSections(response.data);
@@ -85,7 +86,7 @@ export default function AboutContentManager({ token }) {
     try {
       setUploading(true);
       
-      const url = `${import.meta.env.VITE_API_URL}/api/about-content/admin/${editingSection}`;
+      const url = `${BACKEND_URL}/api/about-content/admin/${editingSection}`;
       const method = 'put';
 
       const response = await axios[method](url, formData, {
@@ -109,7 +110,7 @@ export default function AboutContentManager({ token }) {
 
   const toggleActive = async (sectionId) => {
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/api/about-content/admin/${sectionId}/toggle`, {}, {
+      await axios.patch(`${BACKEND_URL}/api/about-content/admin/${sectionId}/toggle`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchSections();

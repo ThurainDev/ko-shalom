@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../utils/api';
 
 const AboutContext = createContext();
 
@@ -19,7 +20,7 @@ export const AboutProvider = ({ children }) => {
   const fetchAboutContent = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/about-content`);
+      const response = await axios.get(`${BACKEND_URL}/api/about-content`);
       const contentData = {};
       
       // Organize content by section

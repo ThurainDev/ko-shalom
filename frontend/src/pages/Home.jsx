@@ -7,7 +7,7 @@ import About_Section from "../components/home/section/About_Section";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { useContent } from "../context/ContentContext";
 import axios from "axios";
-import { resolveImage } from '../utils/api';
+import { resolveImage, BACKEND_URL } from '../utils/api';
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,7 +28,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
         try {
-          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
+          const res = await axios.get(`${BACKEND_URL}/api/products`);
           const sorted = [...res.data].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
           setLatestProducts(sorted.slice(0, 3));
       } catch (e) {

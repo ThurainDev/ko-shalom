@@ -1,5 +1,6 @@
-export const API_BASE = import.meta.env.VITE_API_URL || '/api';
-export const uploadsPath = (p) => `${import.meta.env.VITE_API_URL || ''}/uploads/${p}`;
+export const BACKEND_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || '';
+export const API_BASE = BACKEND_URL;
+export const uploadsPath = (p) => `${BACKEND_URL}/uploads/${p}`;
 export const resolveImage = (image) => {
     if (!image) return '';
     if (image.startsWith('http')) return image;

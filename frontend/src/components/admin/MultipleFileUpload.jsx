@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { resolveImage } from '../../utils/api';
+import { resolveImage, BACKEND_URL } from '../../utils/api';
 import axios from 'axios';
 
 export default function MultipleFileUpload({ 
@@ -40,7 +40,7 @@ export default function MultipleFileUpload({
         formData.append('images', file);
       });
       
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload/images`, formData, {
+      const response = await axios.post(`${BACKEND_URL}/api/upload/images`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { resolveImage } from '../../utils/api';
+import { resolveImage, BACKEND_URL } from '../../utils/api';
 
 export default function FileUpload({ 
   token, 
@@ -28,7 +28,7 @@ export default function FileUpload({
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}${uploadEndpoint}`, formData, {
+      const response = await axios.post(`${BACKEND_URL}${uploadEndpoint}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`

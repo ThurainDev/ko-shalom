@@ -5,7 +5,7 @@ import axios from "axios";
 import Hero_Section from "../components/product/section/Hero_Section";
 import Streaming_Platforms_Section from "../components/product/section/Streaming_Platforms_Section";
 import FAQ_Section from "../components/product/section/FAQ_Section";
-import { uploadsPath } from "../utils/api";
+import { uploadsPath, BACKEND_URL } from "../utils/api";
 
 export default function Product() {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,7 +28,7 @@ export default function Product() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
+      const res = await axios.get(`${BACKEND_URL}/api/products`);
       setProducts(res.data);
     } catch (err) {
       setError(err?.response?.data?.error || err?.message || "Failed to load products");
