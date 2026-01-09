@@ -36,8 +36,19 @@ router.post('/register', auth, AdminController.create);
 
 // Product CRUD routes (admin only)
 router.get('/products', auth, ProductController.index);
-router.post('/products', auth, productUpload, ProductController.create);
-router.put('/products/:id', auth, productUpload, ProductController.update);
+
+const handleUpload = (req, res, next) => {
+  productUpload(req, res, (err) => {
+    if (err) {
+      console.error('Upload error:', err);
+      return res.status(500).json({ error: 'File upload failed', details: err.message });
+    }
+    next();
+  });
+};
+
+router.post('/products', auth, handleUpload, ProductController.create);
+router.put('/products/:id', auth, handleUpload, ProductController.update);
 router.delete('/products/:id', auth, ProductController.delete);
 
 // Contact submissions (admin only)
