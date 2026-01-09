@@ -28,7 +28,7 @@ export default function Product() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/products`);
+      const res = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}api/products`);
       setProducts(res.data);
     } catch (err) {
       setError(err?.response?.data?.error || err?.message || "Failed to load products");
