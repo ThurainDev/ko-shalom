@@ -46,11 +46,14 @@ const connectToDatabase = async () => {
 
 app.use(morgan('dev'));
 const vercelOriginRegex = /^https:\/\/ko-shalom(?:-[a-z0-9]+)?\.vercel\.app$/i;
+const customDomain = 'https://www.shalomraynor.com';
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     if (origin === 'http://localhost:5173') return callback(null, true);
+    if (origin === customDomain) return callback(null, true);
+    if (origin === 'https://shalomraynor.com') return callback(null, true); // Handle non-www version too
     if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) return callback(null, true);
     if (vercelOriginRegex.test(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
@@ -107,14 +110,16 @@ if (require.main === module) {
     });
   };
 
+  // Start server immediately
+  startServer();
+
+  // Try to connect to DB in background
   connectToDatabase()
     .then(() => {
       console.log('connected to db');
-      startServer();
     })
     .catch((err) => {
-      console.error('Error connecting to database:', err && err.stack ? err.stack : err);
-      process.exitCode = 1;
+      console.error('Initial DB connection failed (Server still running):', err.message);
     });
 }
 

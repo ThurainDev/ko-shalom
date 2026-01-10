@@ -1,7 +1,7 @@
 {
   "watch": ["."],
   "ext": "js,json",
-  "ignore": ["*.test.js", "node_modules/"],
-  "delay": "2000",
+  "ignore": ["*.test.js", "node_modules/", "uploads/"],
+  "delay": "1000",
   "exec": "node server.js"
 }
