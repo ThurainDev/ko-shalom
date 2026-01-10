@@ -51,14 +51,29 @@ const customDomain = 'https://www.shalomraynor.com';
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (origin === 'http://localhost:5173') return callback(null, true);
-    if (origin === customDomain) return callback(null, true);
-    if (origin === 'https://shalomraynor.com') return callback(null, true); // Handle non-www version too
-    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) return callback(null, true);
-    if (vercelOriginRegex.test(origin)) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:4000',
+      'https://shalomraynor.com',
+      'https://www.shalomraynor.com',
+      'https://ko-shalom.vercel.app',
+      'https://ko-shalom-oywf.vercel.app'
+    ];
+
+    if (allowedOrigins.includes(origin) || vercelOriginRegex.test(origin)) {
+      return callback(null, true);
+    }
+
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+      return callback(null, true);
+    }
+
+    console.log('CORS Blocked Origin:', origin);
     return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
